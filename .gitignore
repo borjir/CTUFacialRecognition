@@ -1,0 +1,11 @@
+# created by virtualenv automatically
+# Ignore virtual environment folders
+venv/
+.env/
+
+# Ignore common system files
+*.pyc
+__pycache__/
+
+# Allow all other files
+!*
