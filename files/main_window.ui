@@ -178,7 +178,7 @@ border-style: none;</string>
              <item>
               <widget class="QLabel" name="label_18">
                <property name="text">
-                <string>CTU FACIAL</string>
+                <string>WELCOME TO CTU'S</string>
                </property>
                <property name="alignment">
                 <set>Qt::AlignCenter</set>
@@ -188,7 +188,7 @@ border-style: none;</string>
              <item>
               <widget class="QLabel" name="label_19">
                <property name="text">
-                <string>RECOGNITION SYSTEM</string>
+                <string>FACIAL RECOGNITION SYSTEM</string>
                </property>
                <property name="alignment">
                 <set>Qt::AlignCenter</set>
@@ -443,7 +443,7 @@ border-width:0.1px;
 border-style: none;</string>
                </property>
                <property name="text">
-                <string> </string>
+                <string/>
                </property>
                <property name="icon">
                 <iconset>
@@ -1229,7 +1229,7 @@ border-width:0.1px;
 border-style: none;</string>
                </property>
                <property name="text">
-                <string> </string>
+                <string/>
                </property>
                <property name="icon">
                 <iconset>
@@ -2428,6 +2428,7 @@ background-color: #ad7301;
   <tabstop>email_lineEdit</tabstop>
   <tabstop>phone_num_lineEdit</tabstop>
   <tabstop>gender_comboBox</tabstop>
+  <tabstop>civil_status_comboBox</tabstop>
   <tabstop>guardian_lineEdit</tabstop>
   <tabstop>month_comboBox</tabstop>
   <tabstop>day_comboBox</tabstop>
@@ -2436,6 +2437,8 @@ background-color: #ad7301;
   <tabstop>add_photo_btn</tabstop>
   <tabstop>register_confirm_btn</tabstop>
   <tabstop>register_cancel_btn</tabstop>
+  <tabstop>delete_db_btn</tabstop>
+  <tabstop>back_to_mainPage_btn</tabstop>
  </tabstops>
  <resources/>
  <connections/>
