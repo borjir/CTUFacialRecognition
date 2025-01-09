@@ -199,7 +199,7 @@ class MainWindow(QDialog):
         self.register_cancel_btn.clicked.connect(self.register_cancel)
         self.add_photo_btn.clicked.connect(self.add_photo)
         self.delete_db_btn.clicked.connect(self.delete_database)
-        # self.delete_db_btn.setVisible(False)
+        self.delete_db_btn.setVisible(False)
         self.back_to_mainPage_btn.clicked.connect(self.back_to_mainPage)
         # Initialize fields
         self.image_path = None
