@@ -101,90 +101,93 @@ class PopupDialog(QDialog):
         elif self.mode == 'login':
             self.handle_login(encoding)
 
+    # def handle_registration(self, encoding):
+    #     # Registration logic (same as before)
+    #     stored_encodings = account_function.get_all_face_encodings()
+    #     for stored_encoding_bytes in stored_encodings:
+    #         stored_encoding = np.frombuffer(stored_encoding_bytes, dtype=np.float64)
+    #         if face_recognition.compare_faces([stored_encoding], encoding, tolerance=0.6)[0]:
+    #             QMessageBox.warning(self, "Error", "Face already registered.")
+    #             self.capture.release()
+    #             self.reject()
+    #             return
+
+    #     self.face_encoding = encoding
+    #     QMessageBox.information(self, "Success", "Face recognized successfully!")
+    #     self.capture.release()
+    #     self.accept()
+
     def handle_registration(self, encoding):
-        # Registration logic (same as before)
         stored_encodings = account_function.get_all_face_encodings()
+
         for stored_encoding_bytes in stored_encodings:
             stored_encoding = np.frombuffer(stored_encoding_bytes, dtype=np.float64)
-            if face_recognition.compare_faces([stored_encoding], encoding, tolerance=0.6)[0]:
-                QMessageBox.warning(self, "Error", "Face already registered.")
-                self.capture.release()
-                self.reject()
-                return
-
-        self.face_encoding = encoding
-        QMessageBox.information(self, "Success", "Face recognized successfully!")
-        self.capture.release()
-        self.accept()
-
-    def handle_registration(self, encoding):
-        # Fetch all stored face encodings
-        stored_encodings = account_function.get_all_face_encodings()
-
-        for stored_encoding_bytes in stored_encodings:
-            stored_encoding = np.frombuffer(stored_encoding_bytes, dtype=np.float64)
-            
-            # Calculate the distance between encodings
             distance = face_recognition.face_distance([stored_encoding], encoding)[0]
-
-            # Use a strict threshold to determine if the face is already registered
+            
             if distance < 0.4:  # Adjust threshold as needed
                 QMessageBox.warning(self, "Error", "Face already registered.")
                 self.capture.release()
                 self.reject()
                 return
 
-        # If no matches are found, proceed with registration
+        # If no matches or user confirms, proceed with registration
         self.face_encoding = encoding
-        QMessageBox.information(self, "Success", "Face recognized successfully!")
+        QMessageBox.information(self, "Success", "Face registered successfully!")
         self.capture.release()
         self.accept()
-
+    
 
     # def handle_login(self, encoding):
     #     stored_encodings = account_function.get_all_face_encodings()
+    #     matching_user_data = None  # Placeholder for matched user data
+
+    #     # Iterate through stored encodings to find a match
     #     for stored_encoding_bytes in stored_encodings:
-    #         stored_encoding = np.frombuffer(stored_encoding_bytes, dtype=np.float64)
+    #         stored_encoding = np.frombuffer(stored_encoding_bytes, dtype=np.float64)py m
     #         if face_recognition.compare_faces([stored_encoding], encoding, tolerance=0.6)[0]:
-    #             # Fetch user data from account_function
-    #             user_data = account_function.get_user_data_by_encoding(stored_encoding_bytes)
-    #             if user_data:
-    #                 QMessageBox.information(self, "Login Success", "Face recognized. Welcome!")
-    #                 self.capture.release()
-    #                 self.accept()
-    #                 self.login_success_signal.emit(user_data)  # Emit user data
-    #                 return
+    #             # Fetch user data for the matched encoding
+    #             matching_user_data = account_function.get_user_data_by_encoding(stored_encoding_bytes)
+    #             break  # Stop checking after finding the first match
 
-    #     QMessageBox.warning(self, "Login Failed", "Face not recognized in the database.")
-    #     self.capture.release()
-    #     self.reject()
+    #     if matching_user_data:
+    #         QMessageBox.information(self, "Login Success", "Face recognized. Welcome!")
+    #         self.capture.release()
+    #         self.accept()
+    #         self.login_success_signal.emit(matching_user_data)  # Emit the correct user data
+    #     else:
+    #         QMessageBox.warning(self, "Login Failed", "Face not recognized in the database.")
+    #         self.capture.release()
+    #         self.reject()
 
+    # def closeEvent(self, event):
+    #     if hasattr(self, 'capture') and self.capture.isOpened():
+    #         self.capture.release()
+    #     event.accept()
     def handle_login(self, encoding):
         stored_encodings = account_function.get_all_face_encodings()
-        matching_user_data = None  # Placeholder for matched user data
+        potential_matches = []
 
-        # Iterate through stored encodings to find a match
         for stored_encoding_bytes in stored_encodings:
             stored_encoding = np.frombuffer(stored_encoding_bytes, dtype=np.float64)
             if face_recognition.compare_faces([stored_encoding], encoding, tolerance=0.6)[0]:
-                # Fetch user data for the matched encoding
-                matching_user_data = account_function.get_user_data_by_encoding(stored_encoding_bytes)
-                break  # Stop checking after finding the first match
+                user_data = account_function.get_user_data_by_encoding(stored_encoding_bytes)
+                if user_data:
+                    potential_matches.append(user_data)
 
-        if matching_user_data:
+        if len(potential_matches) == 1:
             QMessageBox.information(self, "Login Success", "Face recognized. Welcome!")
             self.capture.release()
             self.accept()
-            self.login_success_signal.emit(matching_user_data)  # Emit the correct user data
+            self.login_success_signal.emit(potential_matches[0])
+        elif len(potential_matches) > 1:
+            QMessageBox.warning(self, "Multiple Matches Found", "Multiple accounts match your face. Please contact support.")
+            self.capture.release()
+            self.reject()
         else:
             QMessageBox.warning(self, "Login Failed", "Face not recognized in the database.")
             self.capture.release()
             self.reject()
 
-    def closeEvent(self, event):
-        if hasattr(self, 'capture') and self.capture.isOpened():
-            self.capture.release()
-        event.accept()
 
 class MainWindow(QDialog):
     def __init__(self):
